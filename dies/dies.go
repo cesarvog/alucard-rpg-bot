@@ -1,4 +1,4 @@
-				package dies
+				package main
 
 				import (
 					"math/rand"

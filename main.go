@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"alucard-rpg-bot/bot"
-	"alucard-rpg-bot/config"
 )	
 	
 func main() {

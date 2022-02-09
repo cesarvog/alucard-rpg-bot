@@ -1,0 +1,9 @@
+{
+	"ImportPath": "kaiservog/alucardrpg/ALUCARD_RPG_BOT",
+	"GoVersion": "go1.17",
+	"GodepVersion": "v80",
+	"Packages": [
+		"."
+	],
+	"Deps": []
+}
