@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"alucard-rpg-bot/config"
-	"alucard-rpg-bot/dies"
 	"github.com/bwmarrin/discordgo"
 )
 
