@@ -1,3 +1,5 @@
+# config.json is for configuartion
+config.json
 # Binaries for programs and plugins
 *.exe
 *.exe~
