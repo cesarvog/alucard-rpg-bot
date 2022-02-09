@@ -12,7 +12,7 @@ var goBot *discordgo.Session
 
 var help = "Use me like this\nTo do a test/contest use '!d n h' where 'n' is normal dice pool and 'h' hunger dice pool\ne.g: !d 4 2\nTo do a rouse check use '!hunger'"
 func Start() {
-	goBot, err := discordgo.New("Bot " + config.Token)
+	goBot, err := discordgo.New("Bot " + Token)
 
 	if err != nil {
 		fmt.Println(err.Error())
