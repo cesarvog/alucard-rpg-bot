@@ -1,4 +1,4 @@
-package bot
+package main
 
 import (
 	"fmt"
@@ -70,13 +70,13 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		var b strings.Builder
 		fmt.Fprintf(&b, "Master <@%s>\n", m.Author.ID)
-		fmt.Fprintf(&b, "\n```css\n%s\n```", dies.Roll(n, h))
+		fmt.Fprintf(&b, "\n```css\n%s\n```", Roll(n, h))
 
 		fmt.Println(b.String())
 		s.ChannelMessageSend(m.ChannelID, b.String())
 		return
 	} else if params[0] == "!hunger" && msg[1:5] == "roll" {
-		s.ChannelMessageSend(m.ChannelID, dies.Hunger())
+		s.ChannelMessageSend(m.ChannelID, Hunger())
 		return 
 	} else {
 		return
