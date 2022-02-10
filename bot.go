@@ -8,11 +8,17 @@ import (
 )
 
 var BotId string
-var goBot *discordgo.Session
+var dice *Dice
+//var goBot *discordgo.Session
 
-var help = "Use me like this\nTo do a test/contest use '!d n h' where 'n' is normal dice pool and 'h' hunger dice pool\ne.g: !d 4 2\nTo do a rouse check use '!hunger'"
+const (
+	help = "Use me like this\nTo do a test/contest use '!d n h' where 'n' is normal dice pool and 'h' hunger dice pool\ne.g: !d 4 2\nTo do a rouse check use '!hunger'"
+)
+
 func Start() {
-	goBot, err := discordgo.New("Bot " + Token)
+	//var goBot *discordgo.Session
+	goBot, err := discordgo.New("Bot " + token)
+	dice = &Dice{}
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -40,45 +46,58 @@ func Start() {
 }
 
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.ID == BotId {
-		return
-	}
-
-	//!d 10 2     -> roll 10 normal dies and two of hunger
 	msg := m.Content
-	if len(msg) <= 0 || msg[0:1] != "!" {
+	if ! isTalkingToMe(m) { 
 		return
 	}
 
 	params := strings.Split(msg, " ")
 
 	if params[0] == "!d" { //normal roll
-		if len(params) != 3 {
-			s.ChannelMessageSend(m.ChannelID, help)
-			return
-		}
-		n, err := strconv.Atoi(params[1])
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, help)
-			return
-		}
-		h, err := strconv.Atoi(params[2])
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, help)
-			return
-		}
-
-		var b strings.Builder
-		fmt.Fprintf(&b, "Master <@%s>\n", m.Author.ID)
-		fmt.Fprintf(&b, "\n```css\n%s\n```", Roll(n, h))
-
-		fmt.Println(b.String())
-		s.ChannelMessageSend(m.ChannelID, b.String())
-		return
-	} else if params[0] == "!hunger" && msg[1:5] == "roll" {
-		s.ChannelMessageSend(m.ChannelID, Hunger())
+		responseDice(params, s, m)
+	} else if params[0] == "!hunger" {
+		s.ChannelMessageSend(m.ChannelID, dice.Hunger())
 		return 
-	} else {
-		return
 	}
 }
+
+
+func responseDice(params []string, s *discordgo.Session, m *discordgo.MessageCreate) { 
+	if len(params) != 3 {
+		s.ChannelMessageSend(m.ChannelID, help)
+		return
+	}
+
+	n, err := strconv.Atoi(params[1])
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, help)
+		return
+	}
+
+	h, err := strconv.Atoi(params[2])
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, help)
+		return
+	}
+
+	var b strings.Builder
+	fmt.Fprintf(&b, "Master <@%s>\n", m.Author.ID)
+	fmt.Fprintf(&b, "```css\n%s\n```", dice.Roll(n, h))
+
+	fmt.Println(b.String())
+	s.ChannelMessageSend(m.ChannelID, b.String())
+}
+
+func isTalkingToMe(m *discordgo.MessageCreate) bool {
+	if m.Author.ID == BotId {
+		return false
+	}
+
+	msg := m.Content
+	if len(msg) <= 0 || string(msg[0]) != "!" {
+		return false
+	}
+
+	return true
+}
+
